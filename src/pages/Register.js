@@ -1,7 +1,8 @@
-
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import '../App.css';
 import logo from '../logo.svg';
+import jwt_decode from "jwt-decode"
 
 
 
@@ -9,7 +10,32 @@ import logo from '../logo.svg';
 
 
 export default function Register() {
-    
+    const [user, setUser] = useState({});
+    function handleCallbackResponse(response) {
+        console.log("encode jwt id toke:" + response.credential);
+        var userObject = jwt_decode(response.credential);
+        console.log(userObject)
+        setUser(userObject)
+        document.getElementById("signInDiv").hidden = true
+    }
+
+    function handleSignOut(event) {
+        setUser({});
+        document.getElementById("signInDiv").hidden = false
+
+    }
+
+    useEffect(() => {
+        google.accounts.id.initialize({
+            client_id: "1004252359413-5vdssg45vum5bvkuk1ok53c6itbt998f.apps.googleusercontent.com",
+            callback: handleCallbackResponse
+        });
+        google.accounts.id.renderButton(
+            document.getElementById("signInDiv"),
+            {theme: "outline",size:"large"}
+        )
+        google.accounts.id.prompt();
+},[])
 
 	return (
     <div className="App ">
@@ -76,7 +102,18 @@ export default function Register() {
                     
                             <div id='signInDiv'></div>
                             
-          
+                          { Object.keys(user).length !== 0 &&
+                    <button className='text-black' onClick={(e) => handleSignOut(e)}>signout</button>
+                }    
+                {user && 
+                                <div>
+                                    <img src={user.picture}></img>
+                                    <h3 className='text-black'>{user.name}</h3>
+                        
+                        
+                </div>
+                }        
+                     
                 </div>
 
                 <p className="mt-8 text-xs font-light text-center text-gray-700">

@@ -19,7 +19,7 @@ function App() {
     <Router>
     <div>
         <Routes>
-          <Route path="/register" element={<Register/>}/>  
+           
               <Route path="" element={<Layout />}>
                     <Route index element={<Dasboard />} />
                     <Route path="todolist" element={<Product />} />
@@ -30,7 +30,7 @@ function App() {
             
 
           </Route>   
-         
+         <Route path="/register" element={<Register/>}/> 
      </Routes>
      </div>
      </Router>
